@@ -24,7 +24,7 @@ public class OrderTest {
         System.setOut(System.out);
     }
 
-    Order order = new Order();
+    com.company.Order order = new Order();
 
     @Test
     public void Given_Nothing_When_DisplayMenuSelection_Then_ShouldDisplayText() {
