@@ -24,22 +24,22 @@ public class OrderTest {
         System.setOut(System.out);
     }
 
-    com.company.Order order = new Order();
+    com.company.Order order = new com.company.Order();
 
     @Test
     public void Given_Chicken_When_DisplayMenuSelected_Then_DisplayChickenSentence() {
         order.displaySelectedMenu(1);
-        assertEquals("Vous avez choisi comme menu : poulet\n", outContent.toString().replace("\r\n", "\n"));
+        assertEquals("Vous avez choisi le menu : poulet\n", outContent.toString().replace("\r\n", "\n"));
     }
     @Test
     public void Given_Beef_When_DisplayMenuSelected_Then_DisplayBeefSentence() {
         order.displaySelectedMenu(2);
-        assertEquals("Vous avez choisi comme menu : boeuf\n", outContent.toString().replace("\r\n", "\n"));
+        assertEquals("Vous avez choisi le menu : boeuf\n", outContent.toString().replace("\r\n", "\n"));
     }
     @Test
     public void Given_Vegetarian_When_DisplayMenuSelected_Then_DisplayVegetarianSentence() {
         order.displaySelectedMenu(3);
-        assertEquals("Vous avez choisi comme menu : végétarien\n", outContent.toString().replace("\r\n", "\n"));
+        assertEquals("Vous avez choisi le menu : végétarien\n", outContent.toString().replace("\r\n", "\n"));
     }
     @Test
     public void Given_TooBigValue_When_DisplayMenuSelected_Then_DisplayErrorSentence() {
