@@ -1,6 +1,10 @@
 package src.com.company;
 
+import java.util.Scanner;
+
+
 public class Interaction {
+    static Scanner sc = new Scanner(System.in);
     /**
      * Display a question about a category in the standard input, get response and display it
      * @param category the category of the question
