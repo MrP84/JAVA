@@ -1,8 +1,13 @@
 package src.com.company;
 
-import java.text.Format;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import static java.nio.file.StandardOpenOption.APPEND;
 
 public class Order {
     public String orderSummary = "";
@@ -45,22 +50,25 @@ public class Order {
     /**
      * Run asking process for a menu.
      */
-    public void runMenu() {
-        /*this.displayAvailableMenu();*/
+    public String runMenu() {
+        //this.displayAvailableMenu();
         int nbMenu = askMenu();
+        int nbSide = -1;
+        int nbDrink = -1;
             switch (nbMenu) {
                 case 1:
-                    askSide(true);
-                    askDrink();
+                    nbSide = askSide(true);
+                    nbDrink = askDrink();
                     break;
                 case 2:
-                    askSide(true);
+                    nbSide = askSide(true);
                     break;
                 case 3:
-                    askSide(false);
-                    askDrink();
+                    nbSide = askSide(false);
+                    nbDrink = askDrink();
                     break;
             }
+            return nbMenu + "," + nbSide + "," + nbDrink + "%n";
 
     }
 
@@ -68,6 +76,7 @@ public class Order {
      * Run asking process for several menus.
      */
     public void runMenus() {
+        Path orderPath = Paths.get("order.csv");
         System.out.println("Combien de menus souhaitez-vous commander ?");
         int menuQuantity = -1;
         boolean responseIsGood;
@@ -85,7 +94,13 @@ public class Order {
         orderSummary = "Résumé de votre commande :%n";
         for (int i = 0; i < menuQuantity; i++) {
             orderSummary += "menu " + (i+1) + ":%n";
-            runMenu();
+            String orderLine = runMenu();
+            try {
+                Files.write(orderPath, String.format(orderLine).getBytes(), APPEND);
+            } catch (IOException e) {
+                System.out.println("Impossible d'écrire dans le fichier");
+                return;
+            }
         }
         System.out.println("");
         System.out.println(String.format(orderSummary));
@@ -231,21 +246,21 @@ public class Order {
     /**
      * Display a question about side in the standard input, get response and display it
      */
-    public void askSide(boolean allSidesEnable) {
+    public int askSide(boolean allSidesEnable) {
         if (allSidesEnable) {
             String[] responsesAllSide = {"légumes frais", "frites", "riz"};
-            askSomething("accompagnement", responsesAllSide);
+            return askSomething("accompagnement", responsesAllSide);
         } else {
             String[] responsesOnlyRice = {"riz", "pas de riz"};
-            askSomething("accompagnement", responsesOnlyRice);
+            return askSomething("accompagnement", responsesOnlyRice);
         }
     }
 
     /**
      * Display a question about drink in the standard input, get response and display it
      */
-    public void askDrink() {
+    public int askDrink() {
         String[] responsesDrink = {"eau plate", "eau gazeuse", "soda"};
-        askSomething("boisson", responsesDrink);
+        return askSomething("boisson", responsesDrink);
     }
 }
