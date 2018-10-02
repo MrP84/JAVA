@@ -1,13 +1,17 @@
 package src.com.company;
 
+import java.text.Format;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Order {
+    public String orderSummary = "";
     Scanner sc = new Scanner(System.in);
 
     /**
      * Display all available menus in the restaurant.
      */
+/*
     public void displayAvailableMenu() {
         System.out.println("Choix menu");
         System.out.println("1 - poulet");
@@ -15,10 +19,12 @@ public class Order {
         System.out.println("3 - végétarien");
         System.out.println("Que souhaitez-vous comme menu ?");
     }
+*/
     /**
      * Display a selected menu.
      * @param nbMenu The selected menu.
      */
+
     public void displaySelectedMenu(int nbMenu) {
         switch (nbMenu) {
             case 1:
@@ -35,6 +41,7 @@ public class Order {
                 break;
         }
     }
+
     /**
      * Run asking process for a menu.
      */
@@ -62,10 +69,26 @@ public class Order {
      */
     public void runMenus() {
         System.out.println("Combien de menus souhaitez-vous commander ?");
-        int menuQuantity = sc.nextInt();
+        int menuQuantity = -1;
+        boolean responseIsGood;
+        do {
+            try {
+                menuQuantity = sc.nextInt();
+                responseIsGood = true;
+            } catch (InputMismatchException e) {
+                sc.next();
+                System.out.println("Vous devez saisir un nombre, correspodant au nombre de menus soufaités");
+                responseIsGood = false;
+            }
+        }
+        while (!responseIsGood);
+        orderSummary = "Résumé de votre commande :%n";
         for (int i = 0; i < menuQuantity; i++) {
+            orderSummary += "menu " + (i+1) + ":%n";
             runMenu();
         }
+        System.out.println("");
+        System.out.println(String.format(orderSummary));
     }
     /**
      * Display a selected side depending on all sides enable or not.
@@ -74,6 +97,7 @@ public class Order {
      * @param nbSide The selected Side
      * @param allSidesEnable  enable display for all side or not
      */
+
     public void displaySelectedSide(int nbSide, boolean allSidesEnable) {
         if (allSidesEnable) {
             switch (nbSide) {
@@ -104,10 +128,12 @@ public class Order {
             }
         }
     }
+
     /**
      * Display a selected drink.
      * @param nbDrink The selected drink.
      */
+
     public void displaySelectedDrink(int nbDrink) {
         switch (nbDrink) {
             case 1:
@@ -124,6 +150,7 @@ public class Order {
                 break;
         }
     }
+
     /**
      * Display all available sides depending on all sides enable or not.
      * All sides = vegetables, frites and rice
@@ -167,14 +194,21 @@ public class Order {
         for (int i = 1; i <= responses.length; i++)
             System.out.println(i + " - " + responses[i - 1]);
         System.out.println("Que souhaitez-vous comme " + category + "?");
-        int nbResponse;
+        int nbResponse = -1;
         boolean responseIsGood;
         do {
-            nbResponse = sc.nextInt();
-            responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
-            if (responseIsGood)
-                System.out.println("Vous avez choisi comme " + category + " : " + responses[nbResponse - 1]);
-            else {
+            try {
+                nbResponse = sc.nextInt();
+                responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
+            } catch (InputMismatchException e) {
+                sc.next(); //vide le scanner
+                responseIsGood = false;
+            }
+            if (responseIsGood) {
+                String choice = "Vous avez choisi comme " + category + " : " + responses[nbResponse - 1];
+                orderSummary += choice + "%n";
+
+            } else {
                 boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
                 if (isVowel)
                     System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
@@ -191,8 +225,7 @@ public class Order {
      */
     public int askMenu() {
         String[] menus = {"poulet", "boeuf", "végétarien"};
-        int choice = askSomething("menu", menus);
-        return choice;
+        return askSomething("menu", menus);
     }
 
     /**
